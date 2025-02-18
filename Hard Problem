@@ -1,0 +1,49 @@
+import java.util.*;
+
+class CourseFullException extends Exception {
+    public CourseFullException(String message) {
+        super(message);
+    }
+}
+
+class PrerequisiteNotMetException extends Exception {
+    public PrerequisiteNotMetException(String message) {
+        super(message);
+    }
+}
+
+class UniversityEnrollmentSystem {
+    private static final int MAX_ENROLLMENT = 3;
+    private static int enrolledStudents = 0;
+    private static final Set<String> completedCourses = new HashSet<>(Arrays.asList("Core Java"));
+    
+    public static void enroll(String course, String prerequisite) throws CourseFullException, PrerequisiteNotMetException {
+        if (enrolledStudents >= MAX_ENROLLMENT) {
+            throw new CourseFullException("Error: CourseFullException - Enrollment limit reached for " + course);
+        }
+        if (prerequisite != null && !completedCourses.contains(prerequisite)) {
+            throw new PrerequisiteNotMetException("Error: PrerequisiteNotMetException - Complete " + prerequisite + " before enrolling in " + course);
+        }
+        enrolledStudents++;
+        System.out.println("Successfully enrolled in " + course);
+    }
+    
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        try {
+            System.out.print("Enroll in Course: ");
+            String course = scanner.nextLine();
+            System.out.print("Prerequisite (if any): ");
+            String prerequisite = scanner.nextLine();
+            if (prerequisite.isEmpty()) prerequisite = null;
+            
+            enroll(course, prerequisite);
+        } catch (CourseFullException | PrerequisiteNotMetException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            System.out.println("Enrollment process completed.");
+            scanner.close();
+        }
+    }
+}
